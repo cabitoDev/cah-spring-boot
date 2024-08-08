@@ -19,7 +19,6 @@ public class GameController {
     @Autowired
     public GameController(GameService gameService) {
         this.gameService = gameService;
-
     }
 
     @GetMapping
@@ -51,7 +50,7 @@ public class GameController {
                 newGame = gameService.saveGame(newGame);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(newGame);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body('DUPLICATED');
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("DUPLICATED");
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
