@@ -27,7 +27,7 @@ public class GameController {
     }
 
     @GetMapping("/{id}")
-    public  ResponseEntity<Object> getGameById(@PathVariable Long id) {
+    public  ResponseEntity<Object> getGameById(@PathVariable String id) {
         try {
             Optional<Game> game = gameService.getGameById(id);
             if (game.isPresent()) {
@@ -58,7 +58,7 @@ public class GameController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Game> updateGame(@PathVariable Long id, @RequestBody Game request) {
+    public ResponseEntity<Game> updateGame(@PathVariable String id, @RequestBody Game request) {
         try {
             Optional<Game> existingGame = gameService.getGameById(id);
             if (existingGame.isPresent()) {
