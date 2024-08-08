@@ -7,6 +7,6 @@ import com.example.demo.models.Game;
 import org.springframework.data.jpa.repository.JpaRepository;;
 
 @Repository
-public interface GameRepository extends JpaRepository<Game, Long> {
+public interface GameRepository extends JpaRepository<Game, String> {
 
 }
