@@ -19,13 +19,18 @@ public class Game {
 	private String id;
 
 	private List<String> cards;
+	private List<Player> players;
+	private Player owner;
 
 	public Game() {
 		this.cards = new ArrayList<>();
 	}
 
-	public Game(String id) {
+	public Game(String id, Player player) {
 		this.id = id;
 		this.cards = new ArrayList<>();
+		this.players = new ArrayList<>();
+		this.players.add(player);
+		this.owner = player;
 	}
 }

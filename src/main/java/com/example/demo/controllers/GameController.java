@@ -46,7 +46,7 @@ public class GameController {
             Optional<Game> existingGame = gameService.getGameById(request.getId());
 
             if (!existingGame.isPresent()) {
-                Game newGame = new Game(request.getId());
+                Game newGame = new Game(request.getId(), request.getOwner());
                 newGame = gameService.saveGame(newGame);
                 return ResponseEntity.status(HttpStatus.ACCEPTED).body(newGame);
             } else {
