@@ -1,28 +1,35 @@
 package com.example.demo.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "card")
+@Table(name = "card", schema = "public")
 @Getter
 @Setter
 public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Identificador único de la carta
-    private String text; // Texto de la carta (asumiendo que "text" es lo que deseas guardar)
+    private Long id;
 
-    // Constructor vacío
+    private String text;
+
+    @ManyToOne // Indica que muchas cartas pueden pertenecer a un jugador
+    @JoinColumn(name = "player_id", nullable = true) // Esto crea la columna player_id en la tabla card
+    @JsonIgnore
+    private Player player;
+
+    @ManyToOne // Indica que muchas cartas pueden pertenecer a un juego
+    @JoinColumn(name = "game_id", nullable = false) // Esto crea la columna game_id en la tabla card
+    @JsonIgnore
+    private Game game;
+
     public Card() {}
 
-    // Constructor con texto
     public Card(String text) {
         this.text = text;
     }

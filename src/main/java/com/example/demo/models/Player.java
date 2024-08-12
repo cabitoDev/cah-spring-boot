@@ -1,16 +1,13 @@
 package com.example.demo.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "player", schema = "public")
@@ -21,17 +18,23 @@ public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Card
+    private List<Card> hand;
+
     @ManyToOne
-    @JoinColumn(name = "mesa_id")
+    @JoinColumn(name = "game_id") // Relación con Game
     @JsonIgnore
     private Game game;
 
-    public Player () {}
-
-    public Player(String name, Game game) {
-        this.name = name;
-        this.game = game;
+    public Player() {
+        this.hand = new ArrayList<>(); // Inicializar la mano como una lista vacía
     }
-    
+
+    public Player(String name) {
+        this.name = name;
+        this.hand = new ArrayList<>(); // Inicializar la mano como una lista vacía
+    }
 }

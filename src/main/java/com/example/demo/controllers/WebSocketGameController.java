@@ -1,13 +1,13 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Game;
+import com.example.demo.models.PlayRequest;
 import com.example.demo.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-
-import java.util.Optional;
 
 @Controller
 public class WebSocketGameController {
@@ -19,14 +19,36 @@ public class WebSocketGameController {
         this.gameService = gameService;
     }
 
-    // Maneja los mensajes enviados al servidor desde el cliente.
-    @MessageMapping("/updateGame")
+    // Maneja la solicitud para repartir cartas a los jugadores
+    @MessageMapping("/dealCards")
     @SendTo("/topic/gameUpdates")
-    public Game updateGame(Game game) throws Exception {
-        // Actualiza el juego en la base de datos.
-        Game updatedGame = gameService.saveGame(game);
-        return updatedGame; // El juego actualizado se enviará a todos los clientes suscritos.
+    public Game dealCards(Game game) throws Exception {
+        // Lógica para repartir cartas entre los jugadores
+        Game updatedGame = gameService.dealCards(game); // Asegúrate de que este método esté implementado correctamente
+        return updatedGame; // Envía el estado del juego actualizado a todos los clientes
     }
 
-    // Puedes añadir más métodos para manejar otros tipos de mensajes.
+    // Maneja la solicitud para jugar una carta
+    @MessageMapping("/playCard")
+    @SendTo("/topic/gameUpdates")
+    public Game playCard(PlayRequest playRequest) throws Exception {
+        // Lógica para manejar el juego de la carta
+        Game updatedGame = gameService.playCard(playRequest.getGameId(), playRequest.getPlayerId(), playRequest.getCardId());
+        return updatedGame; // Envía el estado del juego actualizado a todos los clientes
+    }
+
+    // Maneja la solicitud para seleccionar un ganador
+    @MessageMapping("/selectWinner")
+    @SendTo("/topic/gameUpdates")
+    public Game selectWinner(String gameId) throws Exception {
+        // Lógica para seleccionar un ganador
+        Game updatedGame = gameService.selectWinner(gameId);
+        return updatedGame; // Envía el estado del juego actualizado a todos los clientes
+    }
+
+    @MessageMapping("/broadcast")
+@SendTo("/topic/reply")
+public String broadcastMessage(@Payload String message) {
+  return "You have received a message: " + message;
+}
 }
