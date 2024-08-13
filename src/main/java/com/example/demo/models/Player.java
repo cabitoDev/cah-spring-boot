@@ -16,9 +16,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private String name;
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Card

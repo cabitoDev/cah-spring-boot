@@ -65,7 +65,7 @@ public class GameService {
     }
 
     // Jugar una carta
-    public Game playCard(String gameId, Long playerId, Long cardId) {
+    public Game playCard(String gameId, String playerId, Long cardId) {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found")); // Obtener el juego
 
         // Encuentra el jugador

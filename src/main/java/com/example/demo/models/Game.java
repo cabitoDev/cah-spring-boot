@@ -26,6 +26,8 @@ public class Game {
     @JoinColumn(name = "owner_id")
     private Player owner;
 
+    private String state;
+
     public Game() {
         this.cards = new ArrayList<>();
         this.players = new ArrayList<>();
@@ -37,5 +39,6 @@ public class Game {
         this.players = new ArrayList<>();
         this.players.add(player);
         this.owner = player;
+        this.state = "WAITING";
     }
 }

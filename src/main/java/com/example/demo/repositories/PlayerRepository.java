@@ -7,6 +7,6 @@ import com.example.demo.models.Player;
 import org.springframework.data.jpa.repository.JpaRepository;;
 
 @Repository
-public interface PlayerRepository extends JpaRepository<Player, Long> {
+public interface PlayerRepository extends JpaRepository<Player, String> {
 
 }

@@ -104,10 +104,16 @@ public class GameController {
     }
 
     @PostMapping("/join/{gameId}")
-    public ResponseEntity<Game> joinGame(@PathVariable String gameId, @RequestBody Player player) {
+    public ResponseEntity<Game> existGame(@PathVariable String gameId) {
         try {
-            Game updatedGame = gameService.joinGame(gameId, player);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedGame);
+            Optional<Game> existingGameOptional = gameService.getGameById(gameId);
+            if (existingGameOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.OK).body(existingGameOptional.get());
+            }
+            else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
