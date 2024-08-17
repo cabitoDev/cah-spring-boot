@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.models.Card;
 import com.example.demo.models.Game;
 import com.example.demo.models.Player;
+import com.example.demo.services.BlackCardService;
 import com.example.demo.services.GameService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class GameController {
 
     private final GameService gameService;
+    private final BlackCardService blackCardService;
 
     @Autowired
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, BlackCardService blackCardService) {
         this.gameService = gameService;
+        this.blackCardService = blackCardService;
     }
 
     @GetMapping
@@ -54,7 +57,7 @@ public class GameController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Manejo de error
             }
 
-            Game newGame = new Game(request.getId(), owner);
+            Game newGame = new Game(request.getId(), owner, this.blackCardService.getBlackCards());
 
             newGame = gameService.saveGame(newGame);
             return ResponseEntity.status(HttpStatus.CREATED).body(newGame);

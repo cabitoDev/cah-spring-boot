@@ -18,6 +18,8 @@ public class Game {
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Card
     private List<Card> cards;
+    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Card
+    private List<BlackCard> blackCards;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Player
     private List<Player> players;
@@ -27,18 +29,22 @@ public class Game {
     private Player owner;
 
     private String state;
+    private int round;
+    private int roundsToWind;
 
     public Game() {
         this.cards = new ArrayList<>();
         this.players = new ArrayList<>();
     }
 
-    public Game(String id, Player player) {
+    public Game(String id, Player player, List<BlackCard> blackCards) {
         this.id = id;
         this.cards = new ArrayList<>();
         this.players = new ArrayList<>();
         this.players.add(player);
         this.owner = player;
         this.state = "WAITING";
+        this.round = 0;
+        this.blackCards = blackCards;
     }
 }
