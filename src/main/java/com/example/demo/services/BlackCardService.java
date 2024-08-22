@@ -22,4 +22,10 @@ public class BlackCardService {
         return blackCardRepository.findAll();
     }
 
+    public BlackCard saveBlackCard(String text) {
+        BlackCard blackCard = new BlackCard(text);
+        this.blackCardRepository.save(blackCard);
+        return blackCard;
+    }
+
 }
