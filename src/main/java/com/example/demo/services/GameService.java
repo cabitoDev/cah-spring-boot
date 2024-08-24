@@ -44,24 +44,20 @@ public class GameService {
     public Game dealCards(Game game) {
         // Lógica para repartir cartas
         List<Player> players = game.getPlayers();
-        int numCardsToDeal = 5; // Cambia esto según tus reglas
+        int numCardsToDeal = 7; // Cambia esto según tus reglas
 
         // Supongamos que tienes un método que baraja y reparte cartas
-        List<Card> deck = new ArrayList<>(game.getCards()); // Crea una copia del mazo
-        game.setCards(deck); // Asegúrate de que el mazo está en el estado correcto
-
+        List<Card> deck = new ArrayList<>(game.getWhiteCards());
         for (Player player : players) {
             List<Card> hand = new ArrayList<>();
             for (int i = 0; i < numCardsToDeal && !deck.isEmpty(); i++) {
-                Card card = deck.remove(0); // Reparte la primera carta
+                Card card = deck.remove(0);
                 hand.add(card);
             }
-            player.setHand(hand); // Asumiendo que tienes un método setHand en Player
-            playerRepository.save(player); // Guarda los cambios del jugador
+            player.setHand(hand);
         }
 
-        // Actualiza el juego en la base de datos
-        return gameRepository.save(game);
+        return game;
     }
 
     // Jugar una carta
@@ -135,7 +131,7 @@ public class GameService {
     }
     
 
-    public Player savePlayer(Player player) {
-        return playerRepository.save(player);
+    public Player savePlayer(String playerName) {
+        return playerRepository.save(new Player(playerName));
     }
 }

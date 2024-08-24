@@ -20,9 +20,9 @@ public class Player {
 
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Relación con Card
     private List<Card> hand;
+    private float points;
 
     @ManyToOne
-    @JoinColumn(name = "game_id") // Relación con Game
     @JsonIgnore
     private Game game;
 
@@ -32,6 +32,7 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>(); // Inicializar la mano como una lista vacía
+        this.hand = new ArrayList<>();
+        this.points = 0;
     }
 }

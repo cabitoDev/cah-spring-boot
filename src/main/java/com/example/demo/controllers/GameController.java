@@ -5,6 +5,7 @@ import com.example.demo.models.Game;
 import com.example.demo.models.Player;
 import com.example.demo.services.BlackCardService;
 import com.example.demo.services.GameService;
+import com.example.demo.services.PlayerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,13 @@ public class GameController {
 
     private final GameService gameService;
     private final BlackCardService blackCardService;
+    private final PlayerService playerService;
 
     @Autowired
-    public GameController(GameService gameService, BlackCardService blackCardService) {
+    public GameController(GameService gameService, BlackCardService blackCardService, PlayerService playerService) {
         this.gameService = gameService;
         this.blackCardService = blackCardService;
+        this.playerService = playerService;
     }
 
     @GetMapping
@@ -50,13 +53,8 @@ public class GameController {
     @PostMapping
     public ResponseEntity<Game> createGame(@RequestBody Game request) {
         try {
-            Player owner = request.getOwner();
-            if (owner != null && owner.getName() != null) {
-                owner = gameService.savePlayer(owner); // Guardar el jugador
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Manejo de error
-            }
-
+            String ownerName = request.getOwner().getName();
+            Player owner = gameService.savePlayer(ownerName);
             Game newGame = new Game(request.getId(), owner, this.blackCardService.getBlackCards());
 
             newGame = gameService.saveGame(newGame);
@@ -79,11 +77,11 @@ public class GameController {
                 existingGame.setPlayers(request.getPlayers());
 
                 // Actualiza las cartas y establece la relación con el juego
-                List<Card> updatedCards = request.getCards();
+                List<Card> updatedCards = request.getWhiteCards();
                 for (Card card : updatedCards) {
                     card.setGame(existingGame); // Establece la referencia al juego
                 }
-                existingGame.setCards(updatedCards); // Establece las cartas actualizadas
+                existingGame.setWhiteCards(updatedCards); // Establece las cartas actualizadas
 
                 Game updatedGame = gameService.saveGame(existingGame); // Guarda el juego actualizado
                 return ResponseEntity.status(HttpStatus.OK).body(updatedGame);
@@ -107,10 +105,14 @@ public class GameController {
     }
 
     @PostMapping("/join/{gameId}")
-    public ResponseEntity<Game> existGame(@PathVariable String gameId) {
+    public ResponseEntity<Game> existGame(@PathVariable String gameId,  @RequestBody Player player) {
         try {
             Optional<Game> existingGameOptional = gameService.getGameById(gameId);
             if (existingGameOptional.isPresent()) {
+                String playerName = player.getName();
+                if(playerService.getPlayerByName(playerName) == null){
+                    gameService.savePlayer(playerName);
+                }
                 return ResponseEntity.status(HttpStatus.OK).body(existingGameOptional.get());
             }
             else {
